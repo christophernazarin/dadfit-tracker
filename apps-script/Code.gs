@@ -137,7 +137,8 @@ function addSession_(req) {
   if (SESSIONS.indexOf(session) < 0) fail_('bad_request', 'Unknown session: ' + req.session);
   const id = cleanId_(req.id) || newId_();
   const log = sheet_(TAB.LOG);
-  const dup = readLog_().filter(function (r) { return r.id === id; })[0];
+  const existing = readLog_();
+  const dup = existing.filter(function (r) { return r.id === id; })[0];
   if (dup) return { ok: true, duplicate: true, entry: entryFromLog_(dup) }; // a retry of an add that already worked
 
   const now = nowParts_();
@@ -146,7 +147,7 @@ function addSession_(req) {
   const plan = readPlan_();
   const ps = plan.sessions[session];
   const version = ensureVersion_(session, ps, date);
-  const n = readLog_().reduce(function (m, r) { return Math.max(m, r.n); }, 0) + 1;
+  const n = existing.reduce(function (m, r) { return Math.max(m, r.n); }, 0) + 1;
   const row = log.getLastRow() + 1;
   const notes = cut_(req.note, 2000);
 
@@ -248,19 +249,34 @@ function joinNote_(old, add) { return old ? old + ' | ' + add : add; }
 
 // ---------------------------------------------------------------- reading the sheet
 
+/**
+ * Reads the Log tab. It deliberately skips the formula columns (session_no, day, week, on_schedule):
+ * reading a formula cell can make Google wait for the whole sheet to recalculate, which made the page slow.
+ * The label ("A #8") and on_schedule are worked out here instead, with the same rules as the formulas.
+ */
 function readLog_() {
   const sh = sheet_(TAB.LOG);
   const last = sh.getLastRow();
   if (last < 2) return [];
-  const vals = sh.getRange(2, 1, last - 1, 14).getDisplayValues();
+  const n = last - 1;
+  const ab = sh.getRange(2, 1, n, 2).getDisplayValues();
+  const dt = sh.getRange(2, 4, n, 3).getDisplayValues();
+  const rest = sh.getRange(2, 10, n, 5).getDisplayValues();
+  const days = planDays_();
   const out = [];
-  vals.forEach(function (r, i) {
-    if (r[0] === '' && r[1] === '') return;
+  for (let i = 0; i < n; i++) {
+    if (ab[i][0] === '' && ab[i][1] === '') continue;
+    const session = ab[i][1];
     out.push({
-      row: i + 2, seq: i, n: Number(r[0]), session: r[1], label: r[2], date: r[3], time: r[4], loggedAt: r[5],
-      day: r[6], week: r[7], onSchedule: r[8], version: r[9], rounds: r[10] === '' ? null : Number(r[10]),
-      tag: r[11], notes: r[12], id: r[13]
+      row: i + 2, seq: i, n: Number(ab[i][0]), session: session, date: dt[i][0], time: dt[i][1], loggedAt: dt[i][2],
+      onSchedule: dt[i][0] ? (dayName_(dt[i][0]) === days[session] ? 'Yes' : 'No') : '',
+      version: rest[i][0], rounds: rest[i][1] === '' ? null : Number(rest[i][1]), tag: rest[i][2], notes: rest[i][3], id: rest[i][4], label: ''
     });
+  }
+  const count = {};
+  out.slice().sort(function (a, b) { return a.n - b.n; }).forEach(function (r) {
+    count[r.session] = (count[r.session] || 0) + 1;
+    r.label = r.session + ' #' + count[r.session];
   });
   return out;
 }
@@ -269,13 +285,28 @@ function readSport_() {
   const sh = sheet_(TAB.SPORT);
   const last = sh.getLastRow();
   if (last < 2) return [];
-  const vals = sh.getRange(2, 1, last - 1, 7).getDisplayValues();
+  const vals = sh.getRange(2, 1, last - 1, 6).getDisplayValues();
   const out = [];
   vals.forEach(function (r, i) {
     if (r[0] === '' && r[1] === '') return;
     out.push({ row: i + 2, seq: i, date: r[0], activity: r[1], duration: r[2] === '' ? null : Number(r[2]), notes: r[3], loggedAt: r[4], id: r[5] });
   });
   return out;
+}
+
+/** {A: 'Wed', B: 'Fri', C: 'Mon'} from the small table on the Plan tab (typed cells only). */
+function planDays_() {
+  const out = {};
+  sheet_(TAB.PLAN).getRange(2, 9, 3, 2).getValues().forEach(function (r) {
+    const day = DAY_NAMES.filter(function (d) { return d.toLowerCase() === str_(r[1]).slice(0, 3).toLowerCase(); })[0];
+    if (str_(r[0]) && day) out[str_(r[0]).toUpperCase()] = day;
+  });
+  return out;
+}
+
+function dayName_(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  return DAY_NAMES[(new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])).getUTCDay() + 6) % 7];
 }
 
 function entryFromLog_(r) {

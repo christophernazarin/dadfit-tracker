@@ -230,6 +230,20 @@ for (const mode of ['text', 'dates']) {
   });
   test('GET shows nothing private', () => { assert.ok(!JSON.stringify(JSON.parse(b.run('doGet').content)).includes('goblet')); });
 
+  test('load, add, undo, note and sport never read a formula cell (keeps Google fast)', () => {
+    b.setNow('2026-09-26T09:30:00Z');
+    b.wb.formulaReads = 0;
+    call({ action: 'load' });
+    call({ action: 'add', session: 'C', id: 'perf-1' });
+    call({ action: 'note', id: 'perf-1', note: 'x' });
+    b.setNow('2026-09-26T09:31:00Z');
+    call({ action: 'sport', activity: 'rugby', id: 'perf-sp' });
+    assert.strictEqual(call({ action: 'undo', id: 'perf-sp' }).undone, true);
+    assert.strictEqual(call({ action: 'undo', id: 'perf-1' }).undone, true);
+    assert.strictEqual(b.wb.formulaReads, 0);
+    assert.strictEqual(call({ action: 'load' }).total, 20);
+  });
+
   test('load: plan, latest entries, due session, total', () => {
     const r = call({ action: 'load' });
     assert.strictEqual(r.ok, true);

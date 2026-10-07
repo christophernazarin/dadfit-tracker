@@ -53,6 +53,7 @@ class Range {
   _each(fn) { for (let i = 0; i < this.nr; i++) for (let j = 0; j < this.nc; j++) fn(this.sh._cell(this.r + i, this.c + j), i, j); }
   _val(cell, r, c) {
     if (!cell.f) return cell.v;
+    this.sh.wb.formulaReads = (this.sh.wb.formulaReads || 0) + 1;
     const hf = this.sh.wb.hf();
     const sid = hf.getSheetId(this.sh.name);
     const v = hf.getCellValue({ sheet: sid, row: r - 1, col: c - 1 });
@@ -190,7 +191,7 @@ function createBackend({ key = 'test-key-12345', csvFile, mode = 'text', now = '
   const post = (body) => JSON.parse(vm.runInContext('doPost', ctx)({ postData: { contents: typeof body === 'string' ? body : JSON.stringify(body) } }).content);
   const tab = (name) => ss.getSheetByName(name);
   const grid = (name) => { const s = tab(name); return s.getRange(1, 1, Math.max(s.getLastRow(), 1), Math.max(s.getLastColumn(), 1)).getDisplayValues(); };
-  return { ss, props, logs, post, run, tab, grid, clock, key, setNow: (iso) => { clock.now = Date.parse(iso); wb.invalidate(); } };
+  return { wb, ss, props, logs, post, run, tab, grid, clock, key, setNow: (iso) => { clock.now = Date.parse(iso); wb.invalidate(); } };
 }
 
 module.exports = { createBackend };
