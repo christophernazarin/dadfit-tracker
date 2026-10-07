@@ -229,6 +229,10 @@ async function apiOnce(action, body) {
   try { json = await res.json(); } catch (e) { throw new ApiError('network', "The sheet's reply got lost on the way."); }
   if (window.console) console.debug('dadfit', action, Date.now() - t0 + 'ms', json.timing || '');
   if (!json.ok) throw new ApiError(json.error || 'server_error', json.message || json.error || 'The sheet refused that.');
+  // Google has been seen to send a bare {"ok":true} for a request that never ran. Treat a reply that
+  // lacks what this action must return as a lost reply, so it is retried and never trusted.
+  const complete = { load: json.plan && json.order, add: json.entry, sport: json.entry, note: json.entry, undo: 'undone' in json };
+  if (action in complete && !complete[action]) throw new ApiError('network', "The sheet's reply was incomplete.");
   return json;
 }
 

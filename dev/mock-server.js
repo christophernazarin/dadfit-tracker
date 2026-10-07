@@ -1,6 +1,6 @@
 // Run: node dev/mock-server.js   then open http://localhost:8765
 // Serves index.html with a pretend Google web app behind it (simulated sheet with your migrated data).
-// Test controls:  POST /__mode {"mode":"normal"|"down"|"slow"}   POST /__now {"iso":"2026-10-07T08:00:00Z"}   GET /__rows
+// Test controls:  POST /__mode {"mode":"normal"|"down"|"slow"|"bogus"}   POST /__now {"iso":"2026-10-07T08:00:00Z"}   GET /__rows
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -20,6 +20,7 @@ http.createServer((req, res) => {
   req.on('end', () => {
     if (req.method === 'POST' && url === '/exec') {
       if (mode === 'down') return req.socket.destroy();
+      if (mode === 'bogus') { res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }); return res.end('{"ok":true,"message":"Dad Fit tracker web app is running."}'); }
       const reply = () => { res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }); res.end(JSON.stringify(b.post(body))); };
       return mode === 'slow' ? setTimeout(reply, 3000) : reply();
     }
