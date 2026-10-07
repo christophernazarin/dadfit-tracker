@@ -1,0 +1,8 @@
+# Your workout data and private notes never go in the repo
+*.csv
+# Local tooling
+.claude/
+node_modules/
+
+# The old personal tracker page (may contain workout data)
+dadfit-tracker-v1.html

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dad Fit</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Dad Fit">
+<meta name="theme-color" content="#15171a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #15171a; --raised: #1d2024; --raised-2: #24282d; --iron: #3a4048;
+    --text: #eceae4; --dim: #8f9498; --accent: #ff5a2e; --done: #7c9a6f; --done-bg: #212b1e;
+    --rule: #2c3136; --bad: #ff8a6a; --bad-bg: #2e1d18;
+    --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    --body: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f0efe9; --raised: #ffffff; --raised-2: #e9e7df; --iron: #cfccc2;
+      --text: #1c1d1a; --dim: #6b6a63; --accent: #d9491f; --done: #4f7442; --done-bg: #e3ecdd;
+      --rule: #d9d7cd; --bad: #a3321a; --bad-bg: #f8e3dc;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  body { padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0); min-height: 100vh; }
+  button, input, textarea { font-family: inherit; font-size: 16px; color: inherit; }
+  button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  button:disabled { opacity: 0.5; cursor: default; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  [hidden] { display: none !important; }
+
+  .wrap { max-width: 480px; margin: 0 auto; padding: 16px; }
+  .kicker { font-size: 12px; color: var(--dim); }
+  h1 { font-family: var(--display); font-weight: 700; font-size: 30px; line-height: 1; margin: 4px 0 16px; }
+
+  .big { width: 100%; border: none; border-radius: 14px; background: var(--accent); color: #fff; padding: 22px 18px 20px; text-align: left; display: flex; align-items: center; gap: 16px; }
+  .big .letter { font-family: var(--display); font-weight: 700; font-size: 64px; line-height: 0.85; width: 48px; text-align: center; }
+  .big .t1 { font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1.05; }
+  .big .t2 { font-size: 14px; opacity: 0.92; margin-top: 3px; }
+  .big:active:not(:disabled) { transform: scale(0.99); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .alt { border: 1px solid var(--rule); background: var(--raised); border-radius: 12px; padding: 14px 12px; text-align: left; display: flex; align-items: center; gap: 10px; min-height: 56px; }
+  .alt .letter { font-family: var(--display); font-weight: 700; font-size: 30px; line-height: 1; }
+  .alt .t { font-size: 14px; font-weight: 600; }
+  .alt .s { font-size: 12px; color: var(--dim); }
+  .extras { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .chip { border: 1px dashed var(--iron); background: none; border-radius: 10px; padding: 13px 10px; font-size: 15px; color: var(--dim); min-height: 48px; }
+
+  .card { margin-top: 16px; border-radius: 12px; padding: 14px; background: var(--done-bg); border: 1px solid var(--done); }
+  .card .title { font-weight: 600; font-size: 16px; }
+  .card .sub { font-size: 13px; color: var(--dim); margin-top: 2px; }
+  .card textarea { width: 100%; margin-top: 12px; background: var(--bg); border: 1px solid var(--iron); border-radius: 9px; padding: 10px; min-height: 64px; resize: vertical; line-height: 1.4; }
+  .card .actions { display: flex; gap: 8px; margin-top: 10px; }
+  .btn { flex: 1; border: none; border-radius: 10px; padding: 13px; font-weight: 600; font-size: 15px; background: var(--raised-2); min-height: 46px; }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.undo { flex: 0 0 auto; background: none; border: 1px solid var(--iron); color: var(--accent); padding: 13px 20px; }
+  .card.gone { background: var(--raised); border-color: var(--rule); }
+
+  .banner { margin-bottom: 14px; border-radius: 12px; padding: 12px 14px; font-size: 14.5px; line-height: 1.45; background: var(--bad-bg); border: 1px solid var(--bad); color: var(--text); }
+  .banner b { color: var(--bad); }
+  .banner button { margin-top: 10px; }
+
+  .keyform { background: var(--raised); border: 1px solid var(--rule); border-radius: 12px; padding: 16px; }
+  .keyform label { display: block; font-size: 14px; margin-bottom: 8px; line-height: 1.4; }
+  .keyform input { width: 100%; background: var(--bg); border: 1px solid var(--iron); border-radius: 9px; padding: 12px; }
+  .keyform .btn { margin-top: 12px; width: 100%; }
+
+  .status { font-size: 13px; color: var(--dim); margin-top: 22px; text-align: center; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Dad Fit · 16 kg kettlebell</div>
+  <h1>Dad Fit</h1>
+
+  <div class="banner" id="banner" role="alert" hidden></div>
+
+  <form class="keyform" id="keyform" hidden>
+    <label for="keyInput">Type your secret key. You only do this once on this phone.</label>
+    <input id="keyInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <button class="btn primary" type="submit">Save key</button>
+  </form>
+
+  <main id="main" hidden>
+    <button class="big" id="bigBtn" disabled>
+      <span class="letter" id="bigLetter">–</span>
+      <span><span class="t1" id="bigT1" style="display:block">Loading…</span><span class="t2" id="bigT2" style="display:block"></span></span>
+    </button>
+    <div class="row" id="altRow"></div>
+    <div class="extras">
+      <button class="chip" data-sport="rugby" disabled>Tag rugby</button>
+      <button class="chip" data-sport="badminton" disabled>Badminton</button>
+    </div>
+
+    <section class="card" id="card" aria-live="polite" hidden>
+      <div class="title" id="cardTitle"></div>
+      <div class="sub" id="cardSub"></div>
+      <div id="cardTools">
+        <textarea id="noteBox" placeholder="Add a note (optional)" rows="2" maxlength="2000"></textarea>
+        <div class="actions">
+          <button class="btn undo" id="undoBtn">Undo</button>
+          <button class="btn" id="noteBtn">Save note</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <p class="status" id="status" aria-live="polite"></p>
+</div>
+
+<script>
+// ---- the one setting: the address of your Google web app (ends in /exec). It is not a secret:
+// without your secret key it returns nothing. The key is typed on the phone and never put in this file.
+const API_URL = "https://script.google.com/macros/s/AKfycbyNwM0Nmywt_J78p5RkY7NhdIXJBs5_IeTpN88g9JjebvEP328EeCGebZlTsciG-es/exec";
+
+const KEY_NAME = 'dadfit_key';
+const SESSION_COLOURS = { A: 'A', B: 'B', C: 'C' };
+const $ = (id) => document.getElementById(id);
+
+let data = null;          // the last good answer from the sheet
+let busy = false;         // true while a request is in flight
+let current = null;       // the entry the confirmation card is about {id, kind, label}
+let pending = null;       // {key, id} of a tap that failed, so retrying it can't log twice
+let loadedAt = 0;
+
+// ---------- storage (wrapped: private windows can refuse)
+function getKey() { try { return localStorage.getItem(KEY_NAME) || ''; } catch (e) { return ''; } }
+function setKey(k) { try { localStorage.setItem(KEY_NAME, k); return true; } catch (e) { return false; } }
+function clearKey() { try { localStorage.removeItem(KEY_NAME); } catch (e) {} }
+
+// ---------- talking to the sheet
+class ApiError extends Error { constructor(code, message) { super(message); this.code = code; } }
+
+async function api(action, body) {
+  if (!API_URL) throw new ApiError('no_url', 'No web app address is set at the top of index.html yet.');
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 25000);
+  let res;
+  try {
+    // text/plain keeps this a "simple" request, which Google web apps accept from any page.
+    res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ key: getKey(), action }, body || {})), signal: ctl.signal, redirect: 'follow' });
+  } catch (e) {
+    throw new ApiError('network', "Can't reach the sheet.");
+  } finally { clearTimeout(timer); }
+  let json;
+  try { json = await res.json(); } catch (e) { throw new ApiError('network', "The sheet sent back something unreadable."); }
+  if (!json.ok) throw new ApiError(json.error || 'server_error', json.message || json.error || 'The sheet refused that.');
+  return json;
+}
+
+// ---------- showing things
+function banner(html) {
+  const b = $('banner');
+  b.replaceChildren();
+  if (!html) { b.hidden = true; return; }
+  html(b);
+  b.hidden = false;
+}
+function bannerText(strong, rest, retryLabel, retryFn) {
+  banner((b) => {
+    const s = document.createElement('b'); s.textContent = strong; b.append(s, ' ' + rest);
+    if (retryFn) { b.append(document.createElement('br')); const r = document.createElement('button'); r.className = 'btn'; r.textContent = retryLabel; r.addEventListener('click', retryFn); b.append(r); }
+  });
+}
+
+function niceDate(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+  if (!m) return iso || '';
+  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+}
+
+function render() {
+  const online = !!data;
+  $('keyform').hidden = true;
+  $('main').hidden = false;
+  const bigBtn = $('bigBtn');
+  if (!online) {
+    $('bigLetter').textContent = '–';
+    $('bigT1').textContent = 'Not connected';
+    $('bigT2').textContent = 'Nothing can be logged until the sheet is reachable';
+    bigBtn.disabled = true; bigBtn.dataset.session = '';
+    $('altRow').replaceChildren();
+    document.querySelectorAll('[data-sport]').forEach((b) => { b.disabled = true; });
+    $('status').textContent = '';
+    return;
+  }
+  const next = (data.last ? data.last.n : 0) + 1;
+  $('bigLetter').textContent = data.due;
+  $('bigT1').textContent = 'Session ' + data.due + ' complete';
+  $('bigT2').textContent = 'workout #' + next;
+  bigBtn.dataset.session = data.due;
+  bigBtn.disabled = busy;
+  const alt = $('altRow');
+  alt.replaceChildren();
+  data.order.filter((s) => s !== data.due).forEach((s) => {
+    const b = document.createElement('button');
+    b.className = 'alt'; b.dataset.session = s; b.disabled = busy;
+    const l = document.createElement('span'); l.className = 'letter'; l.textContent = s;
+    const w = document.createElement('span');
+    const t = document.createElement('span'); t.className = 't'; t.style.display = 'block'; t.textContent = 'Session ' + s;
+    const sub = document.createElement('span'); sub.className = 's'; sub.style.display = 'block'; sub.textContent = data.plan[s].day + ' session';
+    w.append(t, sub); b.append(l, w); alt.append(b);
+  });
+  document.querySelectorAll('[data-sport]').forEach((b) => { b.disabled = busy; });
+  const last = data.last;
+  $('status').textContent = last ? 'Last: ' + last.label + ' · ' + niceDate(last.date) + ' · ' + data.total + ' sessions logged' : 'Nothing logged yet';
+}
+
+function showCard(kind, title, sub, entry, opts) {
+  const c = $('card');
+  c.hidden = false;
+  c.classList.toggle('gone', kind === 'gone');
+  $('cardTitle').textContent = title;
+  $('cardSub').textContent = sub || '';
+  $('cardTools').hidden = kind === 'gone';
+  $('noteBox').value = '';
+  $('noteBtn').textContent = 'Save note';
+  $('undoBtn').hidden = !(entry && entry.id);
+  current = entry && entry.id ? { id: entry.id } : null;
+}
+
+// ---------- loading
+async function refresh(quiet) {
+  try {
+    data = await api('load');
+    loadedAt = Date.now();
+    if (!pending) banner(null);
+    render();
+  } catch (e) { handleError(e, 'load'); }
+}
+
+function handleError(e, what) {
+  if (e.code === 'bad_key') {
+    clearKey(); data = null; current = null;
+    $('main').hidden = true; $('card').hidden = true;
+    banner(null); $('keyform').hidden = false;
+    bannerText('That key was not accepted.', 'Check it and type it again.');
+    $('keyInput').value = ''; $('keyInput').focus();
+    return;
+  }
+  if (what === 'load') data = null;
+  const msg = e.code === 'network' ? "Can't reach the sheet." : e.message;
+  if (what === 'load') {
+    bannerText('Not connected.', msg + ' Nothing can be logged until it is back.', 'Try again', () => refresh());
+    render();
+  } else if (what === 'log') {
+    bannerText('NOT confirmed saved.', msg + ' Tap the same button again to retry. It will not be logged twice.');
+  } else if (what === 'undo') {
+    bannerText('Not undone.', msg + ' The entry is still in the sheet.');
+  } else {
+    bannerText('Not saved.', msg);
+  }
+}
+
+// ---------- tapping
+async function log(kind, value) {
+  if (busy) return;
+  const key = kind + ':' + value;
+  if (!pending || pending.key !== key) pending = { key: key, id: 'p' + randomId() };
+  setBusy(true);
+  banner(null);
+  $('card').hidden = true; current = null;
+  try {
+    const r = kind === 'session' ? await api('add', { session: value, id: pending.id }) : await api('sport', { activity: value, id: pending.id });
+    pending = null;
+    const e = r.entry;
+    if (kind === 'session') showCard('ok', '✓ ' + e.label + ' logged', 'Workout #' + e.n + ' · ' + niceDate(e.date) + (e.time ? ' · ' + e.time : '') + (e.onSchedule === 'No' ? ' · not on its usual day' : ''), e);
+    else showCard('ok', '✓ ' + e.label + ' logged', niceDate(e.date), e);
+    setBusy(false);
+    await refresh();
+  } catch (err) {
+    setBusy(false);
+    if (err.code === 'bad_request' || err.code === 'bad_plan') pending = null;
+    handleError(err, 'log');
+  }
+}
+
+async function undo() {
+  if (busy || !current) return;
+  setBusy(true); banner(null);
+  try {
+    const r = await api('undo', { id: current.id });
+    if (r.undone) showCard('gone', 'Undone', (r.entry && r.entry.label ? r.entry.label + ' removed from the sheet.' : 'Removed from the sheet.')); else showCard('gone', 'Already removed', '');
+    current = null; pending = null;
+    setBusy(false);
+    await refresh();
+  } catch (err) { setBusy(false); handleError(err, 'undo'); }
+}
+
+async function saveNote() {
+  const text = $('noteBox').value.trim();
+  if (busy || !current || !text) return;
+  setBusy(true); banner(null);
+  try {
+    await api('note', { id: current.id, note: text });
+    $('noteBox').value = '';
+    $('noteBtn').textContent = 'Note saved ✓';
+  } catch (err) { handleError(err, 'note'); }
+  setBusy(false);
+}
+
+function setBusy(b) {
+  busy = b;
+  document.querySelectorAll('#bigBtn, .alt, [data-sport], #undoBtn, #noteBtn').forEach((el) => { el.disabled = b || (data === null && el.id !== 'undoBtn' && el.id !== 'noteBtn'); });
+  if (!b && data) $('bigBtn').disabled = false;
+}
+
+function randomId() {
+  const a = new Uint8Array(8);
+  (window.crypto || window.msCrypto).getRandomValues(a);
+  return Array.from(a, (x) => x.toString(16).padStart(2, '0')).join('');
+}
+
+// ---------- wiring
+$('bigBtn').addEventListener('click', () => { if ($('bigBtn').dataset.session) log('session', $('bigBtn').dataset.session); });
+$('altRow').addEventListener('click', (e) => { const b = e.target.closest('.alt'); if (b) log('session', b.dataset.session); });
+document.querySelectorAll('[data-sport]').forEach((b) => b.addEventListener('click', () => log('sport', b.dataset.sport)));
+$('undoBtn').addEventListener('click', undo);
+$('noteBtn').addEventListener('click', saveNote);
+$('keyform').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const k = $('keyInput').value.trim();
+  if (!k) return;
+  if (!setKey(k)) { bannerText("This browser won't remember the key.", 'Turn off private browsing, then try again.'); return; }
+  $('keyInput').value = '';
+  banner(null);
+  $('keyform').hidden = true;
+  $('main').hidden = false;
+  render();
+  refresh();
+});
+document.addEventListener('visibilitychange', () => { if (!document.hidden && getKey() && !busy && Date.now() - loadedAt > 60000) refresh(); });
+
+(function start() {
+  if (!API_URL) { bannerText('Not set up yet.', 'The web app address is missing at the top of index.html.'); return; }
+  if (!getKey()) { $('keyform').hidden = false; $('keyInput').focus(); return; }
+  $('main').hidden = false;
+  render();
+  refresh();
+})();
+</script>
+</body></html>
