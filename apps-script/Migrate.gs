@@ -26,6 +26,7 @@ const NAMES = {
 const TIMED = ['plank', 'suitcase carry'];
 
 function migrate() {
+  SHEET_CACHE = {};
   const ss = SpreadsheetApp.getActive();
   const old = findOldTab_(ss);
   const plan = migrationPlan_(readOld_(old));
@@ -102,6 +103,7 @@ function migrate() {
     br.getRange(2 + i, 1, 1, 3).setValues([[dateSerial_(b[0]), dateSerial_(b[1]), b[2]]]);
   });
 
+  SHEET_CACHE = {};
   syncSummaryExercises_();
   Logger.log('DONE. Your original tab is now called "' + BACKUP_NAME + '" and is untouched. Now check the Summary tab against the numbers above.');
 }

@@ -52,7 +52,11 @@ function doGet() {
   return reply_({ ok: true, message: 'Dad Fit tracker web app is running. The page talks to it with POST requests.' });
 }
 
+let SHEET_CACHE = {};   // one request = one fresh cache; saves repeat lookups, which are slow in Apps Script
+
 function doPost(e) {
+  const t0 = Date.now();
+  SHEET_CACHE = {};
   let req;
   try {
     req = JSON.parse(e.postData.contents);
@@ -66,8 +70,11 @@ function doPost(e) {
     }
     const lock = LockService.getScriptLock();
     lock.waitLock(15000);
+    const t1 = Date.now();
     try {
-      return reply_(handle_(req));
+      const out = handle_(req);
+      out.timing = { lockMs: t1 - t0, workMs: Date.now() - t1 }; // server-side time, to tell script time from Google's own delay
+      return reply_(out);
     } finally {
       lock.releaseLock();
     }
@@ -160,14 +167,14 @@ function addSession_(req) {
 
   const sets = sheet_(TAB.SETS);
   const first = sets.getLastRow() + 1;
-  ps.exercises.forEach(function (ex, i) {
-    const r = first + i;
-    setFormats_(sets, r, 1, [[2, '@'], [3, '@'], [5, '@'], [6, '@'], [8, '@'], [9, '@'], [11, FMT_DATE], [13, '@']]);
-    sets.getRange(r, 1, 1, 9).setValues([[n, session, ex.name, ex.amount, ex.unit, ex.per_side, ps.rounds, ex.variant, '']]);
-    sets.getRange(r, 10, 1, 3).setFormulas([setsFormulas_(r)]);
-    sets.getRange(r, 13).setValue(id);
-  });
-  syncSummaryExercises_();
+  const m = ps.exercises.length;
+  // One call per column group for the whole block (each call to Google costs time).
+  [[2, 2], [5, 2], [8, 2], [13, 1]].forEach(function (g) { sets.getRange(first, g[0], m, g[1]).setNumberFormat('@'); });
+  sets.getRange(first, 11, m, 1).setNumberFormat(FMT_DATE);
+  sets.getRange(first, 1, m, 9).setValues(ps.exercises.map(function (ex) { return [n, session, ex.name, ex.amount, ex.unit, ex.per_side, ps.rounds, ex.variant, '']; }));
+  sets.getRange(first, 10, m, 3).setFormulas(ps.exercises.map(function (ex, i) { return setsFormulas_(first + i); }));
+  sets.getRange(first, 13, m, 1).setValues(ps.exercises.map(function () { return [id]; }));
+  syncSummaryExercises_(ps.exercises.map(function (e) { return e.name; }));
   return { ok: true, entry: entryFromLog_(readLog_().filter(function (r) { return r.id === id; })[0]) };
 }
 
@@ -366,7 +373,7 @@ function publicPlan_(plan) {
   const out = {};
   SESSIONS.forEach(function (s) {
     const p = plan.sessions[s];
-    out[s] = { day: p.day, rounds: p.rounds, version: p.version, exercises: p.exercises.map(exLabel_) };
+    out[s] = { day: p.day, rounds: p.rounds, version: p.version, exercises: p.exercises.map(exLabel_), items: p.exercises.map(function (e) { return { name: e.name, amount: e.amount === '' ? null : e.amount, unit: e.unit, per_side: e.per_side, variant: e.variant }; }) };
   });
   return out;
 }
@@ -586,14 +593,16 @@ function buildSummary_(sh) {
 }
 
 /** Keeps the exercise names on the Summary tab in step with the Sets tab (names are the only typed values there). */
-function syncSummaryExercises_() {
+function syncSummaryExercises_(justAdded) {
+  const sh = sheet_(TAB.SUMMARY);
+  const cur = sh.getRange(SUMMARY_EX_FIRST, 1, SUMMARY_EX_ROWS, 1).getValues().map(function (r) { return str_(r[0]); }).filter(Boolean);
+  // Quick exit for the common case: every exercise just logged is already listed.
+  if (justAdded && justAdded.every(function (n) { return cur.indexOf(n) >= 0; })) return;
   const sets = sheet_(TAB.SETS);
   const last = sets.getLastRow();
   const names = [];
   if (last >= 2) sets.getRange(2, 3, last - 1, 1).getValues().forEach(function (r) { const n = str_(r[0]); if (n && names.indexOf(n) < 0) names.push(n); });
   if (names.length > SUMMARY_EX_ROWS) fail_('too_many_exercises', 'The Summary tab has room for ' + SUMMARY_EX_ROWS + ' exercises.');
-  const sh = sheet_(TAB.SUMMARY);
-  const cur = sh.getRange(SUMMARY_EX_FIRST, 1, SUMMARY_EX_ROWS, 1).getValues().map(function (r) { return str_(r[0]); }).filter(Boolean);
   const merged = cur.filter(function (n) { return names.indexOf(n) >= 0; });
   names.forEach(function (n) { if (merged.indexOf(n) < 0) merged.push(n); });
   if (merged.join('|') === cur.join('|')) return;
@@ -605,7 +614,9 @@ function syncSummaryExercises_() {
 // ---------------------------------------------------------------- helpers
 
 function sheet_(name) {
+  if (SHEET_CACHE[name]) return SHEET_CACHE[name];
   const sh = SpreadsheetApp.getActive().getSheetByName(name);
+  if (sh) SHEET_CACHE[name] = sh;
   if (!sh) fail_('not_set_up', 'There is no tab called "' + name + '". Run migrate in the Apps Script editor (see README).');
   return sh;
 }

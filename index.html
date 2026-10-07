@@ -41,14 +41,15 @@
 
   .big { width: 100%; border: none; border-radius: 14px; background: var(--accent); color: #fff; padding: 22px 18px 20px; text-align: left; display: flex; align-items: center; gap: 16px; }
   .big .letter { font-family: var(--display); font-weight: 700; font-size: 64px; line-height: 0.85; width: 48px; text-align: center; }
-  .big .t1 { font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1.05; }
-  .big .t2 { font-size: 14px; opacity: 0.92; margin-top: 3px; }
+  .big .t1 { font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1.05; display: block; }
+  .big .t2 { font-size: 14px; opacity: 0.92; margin-top: 3px; display: block; }
   .big:active:not(:disabled) { transform: scale(0.99); }
+  .quick { width: 100%; margin-top: 8px; border: 1px solid var(--iron); background: var(--raised); border-radius: 12px; padding: 14px; font-weight: 600; font-size: 15px; min-height: 50px; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
   .alt { border: 1px solid var(--rule); background: var(--raised); border-radius: 12px; padding: 14px 12px; text-align: left; display: flex; align-items: center; gap: 10px; min-height: 56px; }
   .alt .letter { font-family: var(--display); font-weight: 700; font-size: 30px; line-height: 1; }
-  .alt .t { font-size: 14px; font-weight: 600; }
-  .alt .s { font-size: 12px; color: var(--dim); }
+  .alt .t { font-size: 14px; font-weight: 600; display: block; }
+  .alt .s { font-size: 12px; color: var(--dim); display: block; }
   .extras { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
   .chip { border: 1px dashed var(--iron); background: none; border-radius: 10px; padding: 13px 10px; font-size: 15px; color: var(--dim); min-height: 48px; }
 
@@ -72,6 +73,47 @@
   .keyform .btn { margin-top: 12px; width: 100%; }
 
   .status { font-size: 13px; color: var(--dim); margin-top: 22px; text-align: center; line-height: 1.5; }
+
+  /* session guide */
+  .gtop { display: flex; align-items: center; gap: 8px; }
+  .gback { background: none; border: 1px solid var(--iron); color: var(--dim); border-radius: 8px; padding: 8px 12px; font-size: 14px; }
+  .gchips { display: flex; gap: 6px; margin-left: auto; }
+  .gchip { border: 1px solid var(--iron); background: var(--raised); border-radius: 8px; padding: 8px 14px; font-family: var(--display); font-weight: 700; font-size: 18px; }
+  .gchip.on { background: var(--text); color: var(--bg); border-color: var(--text); }
+  #guide h2 { font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1.05; margin: 14px 0 2px; }
+  .gsub { font-size: 13px; color: var(--dim); }
+  .gtrack { display: flex; gap: 5px; margin: 12px 0 2px; }
+  .gtrack i { flex: 1; height: 5px; border-radius: 3px; background: var(--iron); display: block; }
+  .gtrack i.done { background: var(--done); }
+  .gtrack i.active { background: var(--accent); }
+  .exlist { background: var(--raised); border: 1px solid var(--rule); border-radius: 12px; padding: 4px 14px; margin: 14px 0 0; list-style: none; }
+  .exlist li { display: flex; align-items: baseline; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--rule); }
+  .exlist li:last-child { border-bottom: none; }
+  .exlist .n { font-family: var(--display); font-weight: 700; font-size: 15px; color: var(--dim); flex: 0 0 16px; }
+  .exlist .a { font-family: var(--display); font-weight: 700; font-size: 18px; flex: 0 0 auto; }
+  .exlist .nm { font-size: 15.5px; flex: 1; }
+  .glabel { font-size: 12px; color: var(--dim); margin: 18px 2px 6px; }
+  .round { background: var(--raised); border: 1px solid var(--rule); border-radius: 12px; margin-top: 10px; width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 12px; text-align: left; min-height: 58px; }
+  .round.locked { opacity: 0.5; }
+  .round .box { flex: 0 0 28px; height: 28px; border-radius: 8px; border: 2px solid var(--iron); display: flex; align-items: center; justify-content: center; }
+  .round .box svg { width: 16px; height: 16px; opacity: 0; }
+  .round.complete .box { background: var(--done-bg); border-color: var(--done); color: var(--done); }
+  .round.complete .box svg { opacity: 1; }
+  .round .rn { font-family: var(--display); font-weight: 700; font-size: 20px; flex: 1; }
+  .round.complete .rn { color: var(--dim); text-decoration: line-through; }
+  .round .rs { font-size: 12px; color: var(--dim); }
+  .round.complete .rs { color: var(--done); }
+  .gfinish { margin-top: 16px; text-align: center; }
+  .gfinish .big2 { font-family: var(--display); font-weight: 700; font-size: 24px; color: var(--done); }
+  .gfinish .btn { margin-top: 12px; width: 100%; }
+  .grest { position: fixed; left: 0; right: 0; bottom: 0; background: var(--raised); border-top: 1px solid var(--rule); padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 20; }
+  .grest .in { max-width: 480px; margin: 0 auto; }
+  .grest .r1 { display: flex; align-items: center; gap: 12px; }
+  .grest .time { font-family: var(--display); font-weight: 700; font-size: 38px; min-width: 70px; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .grest .t1 { font-size: 14px; font-weight: 600; }
+  .grest .t2 { font-size: 12px; color: var(--dim); }
+  .grest .r2 { display: flex; gap: 9px; margin-top: 9px; }
+  #guide { padding-bottom: 150px; }
 </style>
 </head>
 <body>
@@ -88,10 +130,11 @@
   </form>
 
   <main id="main" hidden>
-    <button class="big" id="bigBtn" disabled>
+    <button class="big" id="startBtn" disabled>
       <span class="letter" id="bigLetter">–</span>
-      <span><span class="t1" id="bigT1" style="display:block">Loading…</span><span class="t2" id="bigT2" style="display:block"></span></span>
+      <span><span class="t1" id="bigT1">Loading…</span><span class="t2" id="bigT2"></span></span>
     </button>
+    <button class="quick" id="quickBtn" disabled>Already done it? Log it now</button>
     <div class="row" id="altRow"></div>
     <div class="extras">
       <button class="chip" data-sport="rugby" disabled>Tag rugby</button>
@@ -111,6 +154,35 @@
     </section>
   </main>
 
+  <section id="guide" hidden>
+    <div class="gtop">
+      <button class="gback" id="gBack">‹ Back</button>
+      <div class="gchips" id="gChips"></div>
+    </div>
+    <h2 id="gTitle"></h2>
+    <div class="gsub" id="gSub"></div>
+    <div class="gtrack" id="gTrack"></div>
+    <ul class="exlist" id="gEx"></ul>
+    <div class="glabel">Tap each round when you finish it</div>
+    <div id="gRounds"></div>
+    <div class="gfinish" id="gFinish" hidden>
+      <div class="big2" id="gFinishT"></div>
+      <button class="btn primary" id="gLogBtn">Log this session</button>
+    </div>
+    <div class="grest" id="gRest">
+      <div class="in">
+        <div class="r1">
+          <div class="time" id="gRestTime">60</div>
+          <div><div class="t1" id="gRestT1">Rest between rounds</div><div class="t2" id="gRestT2">Tap start when a round is done</div></div>
+        </div>
+        <div class="r2">
+          <button class="btn" id="gRestReset" style="flex:0 0 auto">Reset</button>
+          <button class="btn primary" id="gRestToggle">Start rest</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <p class="status" id="status" aria-live="polite"></p>
 </div>
 
@@ -119,16 +191,18 @@
 // without your secret key it returns nothing. The key is typed on the phone and never put in this file.
 const API_URL = "https://script.google.com/macros/s/AKfycbyNwM0Nmywt_J78p5RkY7NhdIXJBs5_IeTpN88g9JjebvEP328EeCGebZlTsciG-es/exec";
 
+// Rest between rounds, in seconds (the same as your Session A, B and C pages).
+const REST = { A: 60, B: 60, C: 90 };
+
 const KEY_NAME = 'dadfit_key';
-const SESSION_COLOURS = { A: 'A', B: 'B', C: 'C' };
 const $ = (id) => document.getElementById(id);
 
 let data = null;          // the last good answer from the sheet
 let busy = false;         // true while a request is in flight
-let current = null;       // the entry the confirmation card is about {id, kind, label}
+let current = null;       // the entry the confirmation card is about {id}
 let pending = null;       // {key, id} of a tap that failed, so retrying it can't log twice
 let loadedAt = 0;
-let loading = false;     // true while the first answer from the sheet is awaited
+let loading = false;      // true while the first answer from the sheet is awaited
 
 // ---------- storage (wrapped: private windows can refuse)
 function getKey() { try { return localStorage.getItem(KEY_NAME) || ''; } catch (e) { return ''; } }
@@ -137,11 +211,13 @@ function clearKey() { try { localStorage.removeItem(KEY_NAME); } catch (e) {} }
 
 // ---------- talking to the sheet
 class ApiError extends Error { constructor(code, message) { super(message); this.code = code; } }
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function api(action, body) {
+async function apiOnce(action, body) {
   if (!API_URL) throw new ApiError('no_url', 'No web app address is set at the top of index.html yet.');
   const ctl = new AbortController();
-  const timer = setTimeout(() => ctl.abort(), 45000);
+  const timer = setTimeout(() => ctl.abort(), 30000);
+  const t0 = Date.now();
   let res;
   try {
     // text/plain keeps this a "simple" request, which Google web apps accept from any page.
@@ -150,17 +226,28 @@ async function api(action, body) {
     throw new ApiError('network', "Can't reach the sheet.");
   } finally { clearTimeout(timer); }
   let json;
-  try { json = await res.json(); } catch (e) { throw new ApiError('network', "The sheet sent back something unreadable."); }
+  try { json = await res.json(); } catch (e) { throw new ApiError('network', "The sheet's reply got lost on the way."); }
+  if (window.console) console.debug('dadfit', action, Date.now() - t0 + 'ms', json.timing || '');
   if (!json.ok) throw new ApiError(json.error || 'server_error', json.message || json.error || 'The sheet refused that.');
   return json;
 }
 
+// Google sometimes loses the reply to a POST. Everything except "note" is safe to send again
+// (a session or sport tap carries an id, undo checks the id), so those try up to three times.
+async function api(action, body, noRetry) {
+  const tries = noRetry ? 1 : 3;
+  for (let a = 1; ; a++) {
+    try { return await apiOnce(action, body); }
+    catch (e) { if (e.code !== 'network' || a >= tries) throw e; await sleep(1500); }
+  }
+}
+
 // ---------- showing things
-function banner(html) {
+function banner(fill) {
   const b = $('banner');
   b.replaceChildren();
-  if (!html) { b.hidden = true; return; }
-  html(b);
+  if (!fill) { b.hidden = true; return; }
+  fill(b);
   b.hidden = false;
 }
 function bannerText(strong, rest, retryLabel, retryFn) {
@@ -173,31 +260,35 @@ function bannerText(strong, rest, retryLabel, retryFn) {
 function niceDate(iso) {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
   if (!m) return iso || '';
-  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
-  return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+  return new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
 }
 
 function render() {
-  const online = !!data;
   $('keyform').hidden = true;
+  if (!$('guide').hidden) { $('main').hidden = true; return; }
   $('main').hidden = false;
-  const bigBtn = $('bigBtn');
-  if (!online) {
+  const start = $('startBtn'), quick = $('quickBtn');
+  if (!data) {
     $('bigLetter').textContent = '–';
     $('bigT1').textContent = loading ? 'Connecting…' : 'Not connected';
     $('bigT2').textContent = loading ? 'Waiting for the sheet (a few seconds)' : 'Nothing can be logged until the sheet is reachable';
-    bigBtn.disabled = true; bigBtn.dataset.session = '';
+    start.disabled = true; start.dataset.session = ''; quick.hidden = true; quick.disabled = true; quick.dataset.session = '';
     $('altRow').replaceChildren();
     document.querySelectorAll('[data-sport]').forEach((b) => { b.disabled = true; });
     $('status').textContent = '';
     return;
   }
+  const due = data.due;
   const next = (data.last ? data.last.n : 0) + 1;
-  $('bigLetter').textContent = data.due;
-  $('bigT1').textContent = 'Session ' + data.due + ' complete';
-  $('bigT2').textContent = 'workout #' + next;
-  bigBtn.dataset.session = data.due;
-  bigBtn.disabled = busy;
+  const canGuide = !!(data.plan[due] && data.plan[due].items);
+  $('bigLetter').textContent = due;
+  if (canGuide) { $('bigT1').textContent = 'Start Session ' + due; $('bigT2').textContent = 'workout #' + next + ' · logs itself when you finish'; }
+  else { $('bigT1').textContent = 'Session ' + due + ' complete'; $('bigT2').textContent = 'workout #' + next; }
+  start.dataset.session = due; start.dataset.guide = canGuide ? '1' : '';
+  start.disabled = busy;
+  quick.hidden = !canGuide;
+  quick.textContent = 'Already done it? Log Session ' + due + ' now';
+  quick.dataset.session = due; quick.disabled = busy;
   const alt = $('altRow');
   alt.replaceChildren();
   data.order.filter((s) => s !== data.due).forEach((s) => {
@@ -205,8 +296,8 @@ function render() {
     b.className = 'alt'; b.dataset.session = s; b.disabled = busy;
     const l = document.createElement('span'); l.className = 'letter'; l.textContent = s;
     const w = document.createElement('span');
-    const t = document.createElement('span'); t.className = 't'; t.style.display = 'block'; t.textContent = 'Session ' + s;
-    const sub = document.createElement('span'); sub.className = 's'; sub.style.display = 'block'; sub.textContent = data.plan[s].day + ' session';
+    const t = document.createElement('span'); t.className = 't'; t.textContent = 'Log Session ' + s;
+    const sub = document.createElement('span'); sub.className = 's'; sub.textContent = data.plan[s].day + ' session';
     w.append(t, sub); b.append(l, w); alt.append(b);
   });
   document.querySelectorAll('[data-sport]').forEach((b) => { b.disabled = busy; });
@@ -214,7 +305,7 @@ function render() {
   $('status').textContent = last ? 'Last: ' + last.label + ' · ' + niceDate(last.date) + ' · ' + data.total + ' sessions logged' : 'Nothing logged yet';
 }
 
-function showCard(kind, title, sub, entry, opts) {
+function showCard(kind, title, sub, entry) {
   const c = $('card');
   c.hidden = false;
   c.classList.toggle('gone', kind === 'gone');
@@ -228,7 +319,7 @@ function showCard(kind, title, sub, entry, opts) {
 }
 
 // ---------- loading
-async function refresh(quiet) {
+async function refresh() {
   if (!data) { loading = true; render(); }
   try {
     data = await api('load');
@@ -239,9 +330,10 @@ async function refresh(quiet) {
   } catch (e) { loading = false; handleError(e, 'load'); }
 }
 
-function handleError(e, what) {
+function handleError(e, what, again) {
   if (e.code === 'bad_key') {
     clearKey(); data = null; current = null;
+    closeGuide(true);
     $('main').hidden = true; $('card').hidden = true;
     banner(null); $('keyform').hidden = false;
     bannerText('That key was not accepted.', 'Check it and type it again.');
@@ -254,7 +346,7 @@ function handleError(e, what) {
     bannerText('Not connected.', msg + ' Nothing can be logged until it is back.', 'Try again', () => refresh());
     render();
   } else if (what === 'log') {
-    bannerText('NOT confirmed saved.', msg + ' Tap the same button again to retry. It will not be logged twice.');
+    bannerText('NOT confirmed saved.', msg + ' Tap "' + (again || 'the same button') + '" to try again. It will not be logged twice.');
   } else if (what === 'undo') {
     bannerText('Not undone.', msg + ' The entry is still in the sheet.');
   } else {
@@ -262,9 +354,9 @@ function handleError(e, what) {
   }
 }
 
-// ---------- tapping
-async function log(kind, value) {
-  if (busy) return;
+// ---------- tapping: returns true only when the sheet confirmed the save
+async function log(kind, value) {  // kind: 'session' or 'sport'
+  if (busy) return false;
   const key = kind + ':' + value;
   if (!pending || pending.key !== key) pending = { key: key, id: 'p' + randomId() };
   setBusy(true);
@@ -279,11 +371,13 @@ async function log(kind, value) {
     else showCard('ok', '✓ ' + e.label + ' logged', niceDate(e.date), e);
     setBusy(false);
     await refresh();
+    return true;
   } catch (err) {
     setBusy(false);
     if (err.code === 'bad_request' || err.code === 'bad_plan') pending = null;
     render();
-    handleError(err, 'log');
+    handleError(err, 'log', kind === 'session' ? (value === (data && data.due) ? 'Log Session ' + value + ' now' : 'Log Session ' + value) : (value === 'rugby' ? 'Tag rugby' : 'Badminton'));
+    return false;
   }
 }
 
@@ -304,7 +398,7 @@ async function saveNote() {
   if (busy || !current || !text) return;
   setBusy(true); banner(null);
   try {
-    await api('note', { id: current.id, note: text });
+    await api('note', { id: current.id, note: text }, true);   // not retried: a note would be added twice
     $('noteBox').value = '';
     $('noteBtn').textContent = 'Note saved ✓';
   } catch (err) { handleError(err, 'note'); }
@@ -313,8 +407,7 @@ async function saveNote() {
 
 function setBusy(b) {
   busy = b;
-  document.querySelectorAll('#bigBtn, .alt, [data-sport], #undoBtn, #noteBtn').forEach((el) => { el.disabled = b || (data === null && el.id !== 'undoBtn' && el.id !== 'noteBtn'); });
-  if (!b && data) $('bigBtn').disabled = false;
+  document.querySelectorAll('#startBtn, #quickBtn, .alt, [data-sport], #undoBtn, #noteBtn').forEach((el) => { el.disabled = b || (data === null && el.id !== 'undoBtn' && el.id !== 'noteBtn'); });
 }
 
 function randomId() {
@@ -323,12 +416,155 @@ function randomId() {
   return Array.from(a, (x) => x.toString(16).padStart(2, '0')).join('');
 }
 
+// =====================================================================
+// Session guide: the exercises, a tick for each round, a rest timer, and it logs itself at the end.
+// What to do comes from the Plan tab in your sheet, so changing the plan there changes this.
+// =====================================================================
+const g = { letter: '', checks: [], restLeft: 0, restEnd: 0, running: false, timer: null, wake: null };
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 18 20 6"></polyline></svg>';
+
+function today() { return new Date().toLocaleDateString('en-CA'); }   // local date, e.g. 2026-10-07
+function gKey(letter) { return 'dadfit_guide_' + letter + '_' + today(); }
+function gLoad(letter, rounds) {
+  try { const p = JSON.parse(localStorage.getItem(gKey(letter))); if (p && Array.isArray(p.checks) && p.checks.length === rounds) return p.checks; } catch (e) {}
+  return Array(rounds).fill(false);
+}
+function gSave() { try { localStorage.setItem(gKey(g.letter), JSON.stringify({ checks: g.checks })); } catch (e) {} }
+function gClear(letter) { try { localStorage.removeItem(gKey(letter)); } catch (e) {} }
+
+function plan() { return data && data.plan[g.letter]; }
+function amountText(it) { return it.amount == null ? '–' : (it.unit === 'sec' ? it.amount + '-sec' : String(it.amount)); }
+function nameText(it) {
+  const n = it.name.charAt(0).toUpperCase() + it.name.slice(1);
+  return n + (it.variant ? ', ' + it.variant : '') + (it.per_side ? ', each ' + it.per_side : '');
+}
+function nextRound() { return g.checks.indexOf(false); }
+
+function openGuide(letter) {
+  if (!data || !data.plan[letter] || !data.plan[letter].items) return;
+  stopRest(true);
+  g.letter = letter;
+  g.checks = gLoad(letter, data.plan[letter].rounds);
+  g.restLeft = REST[letter] || 60;
+  $('main').hidden = true; $('card').hidden = true; $('guide').hidden = false; $('status').hidden = true;
+  window.scrollTo(0, 0);
+  wakeOn();
+  renderGuide();
+}
+
+function closeGuide(silent) {
+  stopRest(true);
+  wakeOff();
+  $('guide').hidden = true; $('status').hidden = false;
+  if (!silent) { $('main').hidden = false; render(); }
+}
+
+function renderGuide() {
+  const p = plan();
+  const rounds = p.rounds;
+  const next = nextRound();
+  const doneN = g.checks.filter(Boolean).length;
+  $('gChips').replaceChildren(...['A', 'B', 'C'].map((l) => {
+    const b = document.createElement('button'); b.className = 'gchip' + (l === g.letter ? ' on' : ''); b.textContent = l;
+    b.addEventListener('click', () => { if (l !== g.letter) openGuide(l); });
+    return b;
+  }));
+  $('gTitle').textContent = 'Session ' + g.letter;
+  $('gSub').textContent = next === -1 ? 'All ' + rounds + ' rounds done' : 'Round ' + (next + 1) + ' of ' + rounds + ' · ' + doneN + '/' + rounds + ' done · rest ' + (REST[g.letter] || 60) + ' sec';
+  $('gTrack').replaceChildren(...g.checks.map((c, i) => { const s = document.createElement('i'); s.className = c ? 'done' : (i === next ? 'active' : ''); return s; }));
+  $('gEx').replaceChildren(...p.items.map((it, i) => {
+    const li = document.createElement('li');
+    const n = document.createElement('span'); n.className = 'n'; n.textContent = i + 1;
+    const a = document.createElement('span'); a.className = 'a'; a.textContent = amountText(it);
+    const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = nameText(it);
+    li.append(n, a, nm); return li;
+  }));
+  $('gRounds').replaceChildren(...g.checks.map((c, i) => {
+    const b = document.createElement('button');
+    b.className = 'round' + (c ? ' complete' : '') + (!c && i !== next ? ' locked' : '');
+    const box = document.createElement('span'); box.className = 'box'; box.innerHTML = CHECK;
+    const rn = document.createElement('span'); rn.className = 'rn'; rn.textContent = 'Round ' + (i + 1);
+    const rs = document.createElement('span'); rs.className = 'rs'; rs.textContent = c ? 'Done' : (i === next ? 'Now' : '');
+    b.append(box, rn, rs);
+    b.addEventListener('click', () => toggleRound(i));
+    return b;
+  }));
+  const all = next === -1;
+  $('gFinish').hidden = !all;
+  $('gRest').hidden = all;
+  if (all) $('gFinishT').textContent = 'Session ' + g.letter + ' done';
+  renderRest();
+}
+
+function toggleRound(i) {
+  g.checks[i] = !g.checks[i];
+  gSave();
+  const finishedNow = nextRound() === -1 && g.checks[i];
+  if (finishedNow) stopRest(true);
+  renderGuide();
+  if (finishedNow) finishGuide();
+}
+
+// Done: go back to the main screen and log it. If the sheet can't be reached the ticks are kept
+// and the "Log this session" button stays here, so nothing is lost and nothing is pretended.
+async function finishGuide() {
+  const letter = g.letter;
+  closeGuide();
+  const ok = await log('session', letter);
+  if (ok) gClear(letter);
+}
+
+// ---- rest timer (works from the clock, so it stays right if the phone sleeps)
+function renderRest() {
+  const next = nextRound();
+  if (next === -1) return;
+  const full = REST[g.letter] || 60;
+  $('gRestTime').textContent = g.restLeft;
+  const t1 = $('gRestT1'), t2 = $('gRestT2'), btn = $('gRestToggle');
+  if (g.running) { t1.textContent = 'Resting before round ' + (next + 1); t2.textContent = 'Tap stop to cut it short'; btn.textContent = 'Stop rest'; }
+  else if (g.restLeft === 0) { t1.textContent = "Rest's up"; t2.textContent = 'Go on to round ' + (next + 1); btn.textContent = 'Start rest'; }
+  else if (g.restLeft < full) { t1.textContent = 'Rest paused'; t2.textContent = 'Tap resume to keep resting'; btn.textContent = 'Resume rest'; }
+  else { t1.textContent = next === 0 ? 'Rest between rounds' : 'Round ' + next + ' down'; t2.textContent = next === 0 ? 'Tap start once round 1 is done' : 'Tap start when you are ready to rest'; btn.textContent = 'Start rest'; }
+}
+function startRest() {
+  if (g.running) return;
+  if (g.restLeft === 0) g.restLeft = REST[g.letter] || 60;
+  g.restEnd = Date.now() + g.restLeft * 1000;
+  g.running = true;
+  g.timer = setInterval(tickRest, 250);
+  renderRest();
+}
+function tickRest() {
+  g.restLeft = Math.max(0, Math.ceil((g.restEnd - Date.now()) / 1000));
+  if (g.restLeft <= 0) { stopRest(false); if (navigator.vibrate) { try { navigator.vibrate([200, 100, 200]); } catch (e) {} } }
+  renderRest();
+}
+function stopRest(resetToFull) {
+  g.running = false;
+  clearInterval(g.timer); g.timer = null;
+  if (resetToFull) g.restLeft = REST[g.letter] || 60;
+  if (!$('guide').hidden) renderRest();
+}
+
+// ---- keep the screen on while the guide is open (where the phone allows it)
+async function wakeOn() { try { if (navigator.wakeLock && !g.wake) { g.wake = await navigator.wakeLock.request('screen'); g.wake.addEventListener('release', () => { g.wake = null; }); } } catch (e) {} }
+function wakeOff() { try { if (g.wake) g.wake.release(); } catch (e) {} g.wake = null; }
+
 // ---------- wiring
-$('bigBtn').addEventListener('click', () => { if ($('bigBtn').dataset.session) log('session', $('bigBtn').dataset.session); });
+$('startBtn').addEventListener('click', () => {
+  const s = $('startBtn').dataset.session;
+  if (!s) return;
+  if ($('startBtn').dataset.guide) openGuide(s); else log('session', s);
+});
+$('quickBtn').addEventListener('click', () => { if ($('quickBtn').dataset.session) log('session', $('quickBtn').dataset.session); });
 $('altRow').addEventListener('click', (e) => { const b = e.target.closest('.alt'); if (b) log('session', b.dataset.session); });
 document.querySelectorAll('[data-sport]').forEach((b) => b.addEventListener('click', () => log('sport', b.dataset.sport)));
 $('undoBtn').addEventListener('click', undo);
 $('noteBtn').addEventListener('click', saveNote);
+$('gBack').addEventListener('click', () => closeGuide());
+$('gLogBtn').addEventListener('click', () => finishGuide());
+$('gRestToggle').addEventListener('click', () => { if (g.running) stopRest(false); else startRest(); });
+$('gRestReset').addEventListener('click', () => { stopRest(true); });
 $('keyform').addEventListener('submit', (e) => {
   e.preventDefault();
   const k = $('keyInput').value.trim();
@@ -341,7 +577,11 @@ $('keyform').addEventListener('submit', (e) => {
   render();
   refresh();
 });
-document.addEventListener('visibilitychange', () => { if (!document.hidden && getKey() && !busy && Date.now() - loadedAt > 60000) refresh(); });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) return;
+  if (!$('guide').hidden) { wakeOn(); if (g.running) tickRest(); }
+  else if (getKey() && !busy && Date.now() - loadedAt > 60000) refresh();
+});
 
 (function start() {
   if (!API_URL) { bannerText('Not set up yet.', 'The web app address is missing at the top of index.html.'); return; }

@@ -256,6 +256,13 @@ for (const mode of ['text', 'dates']) {
     assert.strictEqual(r.latest[0].kind, 'session'); assert.strictEqual(r.latest[0].n, 20);
     assert.strictEqual(r.undoId, ''); // migrated rows can't be undone
   });
+  test('load: plan has structured items for the session guide, and server timing is reported', () => {
+    const r = call({ action: 'load' });
+    assert.deepStrictEqual(r.plan.B.items[0], { name: 'suitcase carry', amount: 75, unit: 'sec', per_side: 'side', variant: '' });
+    assert.deepStrictEqual(r.plan.A.items[2], { name: 'single-arm KB row', amount: 12, unit: 'reps', per_side: 'arm', variant: 'split-stance' });
+    assert.strictEqual(r.plan.C.items.length, 4);
+    assert.ok(r.timing && typeof r.timing.lockMs === 'number' && typeof r.timing.workMs === 'number');
+  });
 
   let c21;
   test('add: C session writes Log + Sets rows with everything captured automatically', () => {

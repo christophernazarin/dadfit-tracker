@@ -61,3 +61,14 @@ Only needed when you change `Code.gs` (not when you edit the sheet).
 - Red "NOT confirmed saved" on the page: the sheet could not be reached. Tap the same button again. It will not log twice. Check the sheet to be sure.
 - "That key was not accepted": retype the key.
 - Page says nothing at all: check the web app address at the top of `index.html` is still the one under **Deploy → Manage deployments**.
+
+## Doing a session on the page
+
+1. Open the page. The big button says **Start Session A** (the one due next, worked out from what is already logged).
+2. It shows the exercises from the **Plan** tab and a tick box for each round. Tap a round when you finish it. The rest timer at the bottom is manual: tap **Start rest** after each round. It buzzes at zero, and keeps the right time if the screen locks.
+3. Tick the last round and the session **logs itself**, then shows the confirmation with Undo and a note box. Your ticks are saved on the phone as you go, so closing the page does not lose them.
+4. If the sheet can't be reached at that moment, a red warning says so, nothing is logged, and your ticks are kept. Tap **Log Session A now** to try again. It will not log twice.
+5. **Already done it?** Tap **Log Session A now** on the main screen to log without the guide.
+6. The **A B C** chips at the top of the guide switch to another session.
+
+Rest times (A 60 sec, B 60 sec, C 90 sec) are the `REST` line near the top of the script in `index.html`.
